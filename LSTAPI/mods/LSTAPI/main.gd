@@ -77,12 +77,12 @@ func _startup():
 	match current_mode:
 		TimeMode.REALTIME:
 			check_time()
-			create_timer(poll_realtime_timer, 1, "check_time") # Needed to keep the real_time var up to date
-			create_timer(irl_min_timer, 60, "_emit_minute")
-			create_timer(irl_hour_timer, 3600, "_emit_hour")
-			create_timer(irl_day_timer, 86400, "_emit_day")
+			_create_timer(poll_realtime_timer, 1, "check_time") # Needed to keep the real_time var up to date
+			_create_timer(irl_min_timer, 60, "_emit_minute")
+			_create_timer(irl_hour_timer, 3600, "_emit_hour")
+			_create_timer(irl_day_timer, 86400, "_emit_day")
 		TimeMode.INGAMETIME:
-			create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
+			_create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
 
 func _emit_minute():
 	emit_signal("minute_has_passed")
@@ -97,7 +97,7 @@ func _physics_process(delta):
 	#print(str(check_time()))
 	pass
 
-func create_timer(timer, wait_by, function):
+func _create_timer(timer, wait_by, function):
 	timer = Timer.new()
 	timer.wait_time = wait_by
 	add_child(timer)
