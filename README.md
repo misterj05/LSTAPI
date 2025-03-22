@@ -31,7 +31,7 @@ func _ready():
     if LSTAPI != null:
         LSTAPI.connect("minute_has_passed", self, "_on_minute_update")
 
-func _on_minute_update():
+func _on_minute_update(current_time):
     print("Minute has updated.")
 ```
 
@@ -44,9 +44,7 @@ func _ready():
     if LSTAPI != null:
         LSTAPI.connect("minute_has_passed", self, "_on_minute_update")
 
-func _on_minute_update():
-    current_time = LSTAPI.check_time()
-
+func _on_minute_update(current_time):
     if current_time["hour"] != 5:
         print("Hour is not 5. Returning.")
         return
