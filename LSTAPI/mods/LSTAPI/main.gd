@@ -62,6 +62,20 @@ func _on_config_update(mod_id: String, new_config: Dictionary):
 func get_config():
 	return config
 
+func get_minute():
+	match current_mode:
+		TimeMode.REALTIME:
+			return real_time["minute"]
+		TimeMode.INGAMETIME:
+			return ingame_time["minute"]
+
+func get_hour():
+	match current_mode:
+		TimeMode.REALTIME:
+			return real_time["hour"]
+		TimeMode.INGAMETIME:
+			return ingame_time["hour"]
+
 func _ready():
 	print(ID + " has loaded!")
 	if tb != null:
