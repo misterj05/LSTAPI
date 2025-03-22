@@ -70,6 +70,8 @@ func get_minute():
 			return ingame_time["minute"]
 
 func get_hour():
+	if config["force_hour"] != 0:
+		return config["force_hour"]
 	match current_mode:
 		TimeMode.REALTIME:
 			return real_time["hour"]
