@@ -6,7 +6,7 @@ signal day_has_passed
 signal config_has_updated
 
 const ID = "LSTAPI"
-const mod_ver = "0.1.0"
+const mod_ver = "0.1.1"
 onready var real_time = {"hour": 0, "minute": 0, "second": 0}
 onready var ingame_time = {"hour": 6, "minute": 0, "second": 0}
 
