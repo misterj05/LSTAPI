@@ -85,13 +85,25 @@ func _startup():
 			_create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
 
 func _emit_minute():
-	emit_signal("minute_has_passed")
+	match current_mode:
+		TimeMode.REALTIME:
+			emit_signal("minute_has_passed", real_time)
+		TimeMode.INGAMETIME:
+			emit_signal("minute_has_passed", ingame_time)
 
 func _emit_hour():
-	emit_signal("hour_has_passed")
+	match current_mode:
+		TimeMode.REALTIME:
+			emit_signal("hour_has_passed", real_time)
+		TimeMode.INGAMETIME:
+			emit_signal("hour_has_passed", ingame_time)
 
 func _emit_day():
-	emit_signal("day_has_passed")
+	match current_mode:
+		TimeMode.REALTIME:
+			emit_signal("day_has_passed", real_time)
+		TimeMode.INGAMETIME:
+			emit_signal("day_has_passed", ingame_time)
 
 func _physics_process(delta):
 	#print(str(check_time()))
