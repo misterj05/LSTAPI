@@ -10,12 +10,12 @@ const mod_ver = "0.1.1"
 onready var real_time = {"hour": 0, "minute": 0, "second": 0}
 onready var ingame_time = {"hour": 6, "minute": 0, "second": 0}
 
-var poll_realtime_timer:Timer
-var irl_second_timer:Timer
-var irl_min_timer:Timer
-var irl_hour_timer:Timer
-var irl_day_timer:Timer
-var in_game_min_timer:Timer
+var poll_realtime_timer: Timer
+var irl_second_timer: Timer
+var irl_min_timer: Timer
+var irl_hour_timer: Timer
+var irl_day_timer: Timer
+var in_game_min_timer: Timer
 
 var config: Dictionary
 var LSTAPI_config_default: Dictionary = {
