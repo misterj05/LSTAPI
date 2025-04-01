@@ -55,9 +55,19 @@ func _on_config_update(mod_id: String, new_config: Dictionary):
 	if mod_id != ID:
 		return
 
+	_cleanup()
 	config = new_config
 	_check_config()
+
+	match config["real_time"]:
+		true:
+			current_mode = TimeMode.REALTIME
+		false:
+			current_mode = TimeMode.INGAMETIME
+
 	emit_signal("config_has_updated",config)
+
+	_startup()
 
 func get_config():
 	return config
@@ -93,12 +103,22 @@ func _startup():
 	match current_mode:
 		TimeMode.REALTIME:
 			check_time()
-			_create_timer(poll_realtime_timer, 1, "check_time") # Needed to keep the real_time var up to date
-			_create_timer(irl_min_timer, 60, "_emit_minute")
-			_create_timer(irl_hour_timer, 3600, "_emit_hour")
-			_create_timer(irl_day_timer, 86400, "_emit_day")
+			poll_realtime_timer = _create_timer(poll_realtime_timer, 1, "check_time") # Needed to keep the real_time var up to date
+			irl_min_timer = _create_timer(irl_min_timer, 60, "_emit_minute")
+			irl_hour_timer = _create_timer(irl_hour_timer, 3600, "_emit_hour")
+			irl_day_timer = _create_timer(irl_day_timer, 86400, "_emit_day")
 		TimeMode.INGAMETIME:
-			_create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
+			in_game_min_timer = _create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
+
+func _cleanup():
+	match current_mode:
+		TimeMode.REALTIME:
+			poll_realtime_timer.queue_free()
+			irl_min_timer.queue_free()
+			irl_hour_timer.queue_free()
+			irl_day_timer.queue_free()
+		TimeMode.INGAMETIME:
+			in_game_min_timer.queue_free()
 
 func _emit_minute():
 	match current_mode:
