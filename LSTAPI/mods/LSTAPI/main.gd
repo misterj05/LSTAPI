@@ -7,8 +7,8 @@ signal config_has_updated
 
 const ID = "LSTAPI"
 const mod_ver = "0.1.1"
-onready var real_time = {"hour": 0, "minute": 0, "second": 0}
-onready var ingame_time = {"hour": 6, "minute": 0, "second": 0}
+onready var real_time: Dictionary = {"hour": 0, "minute": 0, "second": 0}
+onready var ingame_time: Dictionary = {"hour": 6, "minute": 0, "second": 0}
 
 var poll_realtime_timer: Timer
 var irl_second_timer: Timer
