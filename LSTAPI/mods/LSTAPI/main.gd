@@ -65,12 +65,9 @@ func _on_config_update(mod_id: String, new_config: Dictionary):
 		false:
 			current_mode = TimeMode.INGAMETIME
 
-	emit_signal("config_has_updated",config)
+	emit_signal("config_has_updated", config)
 
 	_startup()
-
-func get_config():
-	return config
 
 func get_minute():
 	match current_mode:
