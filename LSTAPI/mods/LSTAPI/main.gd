@@ -103,22 +103,22 @@ func _startup():
 	match current_mode:
 		TimeMode.REALTIME:
 			check_time()
-			poll_realtime_timer = _create_timer(poll_realtime_timer, 1, "check_time") # Needed to keep the real_time var up to date
-			irl_min_timer = _create_timer(irl_min_timer, 60, "_emit_minute")
-			irl_hour_timer = _create_timer(irl_hour_timer, 3600, "_emit_hour")
-			irl_day_timer = _create_timer(irl_day_timer, 86400, "_emit_day")
+			poll_realtime_timer = _create_timer("poll_realtime_timer", 1, self, "check_time") # Needed to keep the real_time var up to date
+			irl_min_timer = _create_timer("irl_min_timer", 60, self, "_emit_minute")
+			irl_hour_timer = _create_timer("irl_hour_timer", 3600, self, "_emit_hour")
+			irl_day_timer = _create_timer("irl_day_timer", 86400, self, "_emit_day")
 		TimeMode.INGAMETIME:
-			in_game_min_timer = _create_timer(in_game_min_timer, config["in_game_minute_length_in_seconds"], "_in_game_time_has_passed")
+			in_game_min_timer = _create_timer("in_game_min_timer", config["in_game_minute_length_in_seconds"], self, "_in_game_time_has_passed")
 
 func _cleanup():
 	match current_mode:
 		TimeMode.REALTIME:
-			poll_realtime_timer.queue_free()
-			irl_min_timer.queue_free()
-			irl_hour_timer.queue_free()
-			irl_day_timer.queue_free()
+			poll_realtime_timer.free()
+			irl_min_timer.free()
+			irl_hour_timer.free()
+			irl_day_timer.free()
 		TimeMode.INGAMETIME:
-			in_game_min_timer.queue_free()
+			in_game_min_timer.free()
 
 func _emit_minute():
 	match current_mode:
@@ -145,11 +145,12 @@ func _physics_process(delta):
 	#print(str(check_time()))
 	pass
 
-func _create_timer(timer, wait_by, function):
-	timer = Timer.new()
+func _create_timer(timer_name: String, wait_by, connect_target: Node, function: String):
+	var timer = Timer.new()
+	timer.name = timer_name
 	timer.wait_time = wait_by
 	add_child(timer)
-	timer.connect("timeout", self, function)
+	timer.connect("timeout", connect_target, function)
 	timer.start()
 	return timer
 
