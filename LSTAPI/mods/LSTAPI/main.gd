@@ -4,6 +4,7 @@ signal minute_has_passed
 signal hour_has_passed
 signal day_has_passed
 signal config_has_updated
+signal time_has_jumped
 
 const ID = "LSTAPI"
 const mod_ver = "0.1.1"
@@ -62,8 +63,10 @@ func _on_config_update(mod_id: String, new_config: Dictionary):
 	match config["real_time"]:
 		true:
 			current_mode = TimeMode.REALTIME
+			emit_signal("time_has_jumped", real_time)
 		false:
 			current_mode = TimeMode.INGAMETIME
+			emit_signal("time_has_jumped", ingame_time)
 
 	emit_signal("config_has_updated", config)
 
