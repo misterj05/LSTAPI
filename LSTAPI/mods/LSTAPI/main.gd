@@ -7,7 +7,7 @@ signal config_has_updated
 signal time_has_jumped
 
 const ID = "LSTAPI"
-const mod_ver = "0.1.1"
+const mod_ver = "0.1.2"
 onready var real_time: Dictionary = {"hour": 0, "minute": 0, "second": 0}
 onready var ingame_time: Dictionary = {"hour": 6, "minute": 0, "second": 0}
 
