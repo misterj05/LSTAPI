@@ -159,13 +159,13 @@ func _in_game_time_has_passed():
 	if ingame_time["minute"] >= 60:
 		ingame_time["minute"] = 0
 		ingame_time["hour"] = ingame_time["hour"] + 1
+		if ingame_time["hour"] >= 24:
+			ingame_time = {"hour": 0, "minute": 0, "second": 0}
+			_emit_day()
 		if config["force_hour"] == 0: _emit_hour()
 	_emit_minute()
 	if config["force_hour"] != 0:
 		ingame_time["hour"] = config["force_hour"]
-	if ingame_time["hour"] >= 24:
-		ingame_time = {"hour": 0, "minute": 0, "second": 0}
-		_emit_day()
 
 func check_time():
 	match current_mode:
