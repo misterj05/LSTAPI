@@ -156,11 +156,11 @@ func _create_timer(timer_name: String, wait_by, connect_target: Node, function: 
 
 func _in_game_time_has_passed():
 	ingame_time["minute"] = ingame_time["minute"] + 1
-	_emit_minute()
 	if ingame_time["minute"] >= 60:
 		ingame_time["minute"] = 0
 		ingame_time["hour"] = ingame_time["hour"] + 1
 		if config["force_hour"] == 0: _emit_hour()
+	_emit_minute()
 	if config["force_hour"] != 0:
 		ingame_time["hour"] = config["force_hour"]
 	if ingame_time["hour"] >= 24:
