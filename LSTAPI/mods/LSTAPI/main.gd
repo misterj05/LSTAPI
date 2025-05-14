@@ -12,7 +12,6 @@ const mod_ver = "0.1.3"
 onready var real_time: Dictionary = {"hour": 0, "minute": 0, "second": 0}
 onready var ingame_time: Dictionary = {"hour": 6, "minute": 0, "second": 0}
 
-var poll_realtime_timer: Timer
 var irl_sec_timer: Timer
 var irl_min_timer: Timer
 var irl_hour_timer: Timer
@@ -111,8 +110,7 @@ func _ready():
 func _startup():
 	match current_mode:
 		TimeMode.REALTIME:
-			check_time()
-			poll_realtime_timer = _create_timer("poll_realtime_timer", 1, self, "check_time") # Needed to keep the real_time var up to date
+			real_time = Time.get_time_dict_from_system()
 			irl_sec_timer = _create_timer("irl_sec_timer", 1, self, "_emit_second")
 			irl_min_timer = _create_timer("irl_min_timer", 60, self, "_emit_minute")
 			irl_hour_timer = _create_timer("irl_hour_timer", 3600, self, "_emit_hour")
@@ -125,7 +123,6 @@ func _startup():
 func _cleanup():
 	match current_mode:
 		TimeMode.REALTIME:
-			poll_realtime_timer.free()
 			irl_sec_timer.free()
 			irl_min_timer.free()
 			irl_hour_timer.free()
@@ -137,6 +134,7 @@ func _cleanup():
 func _emit_second():
 	match current_mode:
 		TimeMode.REALTIME:
+			real_time = Time.get_time_dict_from_system()
 			emit_signal("second_has_passed", real_time)
 		TimeMode.INGAMETIME:
 			ingame_time["second"] = ingame_time["second"] + 1
@@ -195,7 +193,6 @@ func _in_game_time_has_passed():
 func check_time():
 	match current_mode:
 		TimeMode.REALTIME:
-			real_time = Time.get_time_dict_from_system()
 			if config["force_hour"] != 0:
 				real_time["hour"] = config["force_hour"]
 			return real_time
