@@ -118,6 +118,7 @@ func _startup():
 			irl_hour_timer = _create_timer("irl_hour_timer", 3600, self, "_emit_hour")
 			irl_day_timer = _create_timer("irl_day_timer", 86400, self, "_emit_day")
 		TimeMode.INGAMETIME:
+			ingame_time["second"] = 0
 			in_game_sec_timer = _create_timer("in_game_sec_timer", config["in_game_minute_length_in_seconds"] / 60, self, "_emit_second")
 			in_game_min_timer = _create_timer("in_game_min_timer", config["in_game_minute_length_in_seconds"], self, "_in_game_time_has_passed")
 
