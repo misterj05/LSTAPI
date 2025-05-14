@@ -1,5 +1,6 @@
 extends Node
 
+signal second_has_passed
 signal minute_has_passed
 signal hour_has_passed
 signal day_has_passed
@@ -12,10 +13,11 @@ onready var real_time: Dictionary = {"hour": 0, "minute": 0, "second": 0}
 onready var ingame_time: Dictionary = {"hour": 6, "minute": 0, "second": 0}
 
 var poll_realtime_timer: Timer
-var irl_second_timer: Timer
+var irl_sec_timer: Timer
 var irl_min_timer: Timer
 var irl_hour_timer: Timer
 var irl_day_timer: Timer
+var in_game_sec_timer: Timer
 var in_game_min_timer: Timer
 
 var config: Dictionary
@@ -72,6 +74,13 @@ func _on_config_update(mod_id: String, new_config: Dictionary):
 
 	_startup()
 
+func get_second():
+	match current_mode:
+		TimeMode.REALTIME:
+			return real_time["second"]
+		TimeMode.INGAMETIME:
+			return ingame_time["second"]
+
 func get_minute():
 	match current_mode:
 		TimeMode.REALTIME:
@@ -104,21 +113,35 @@ func _startup():
 		TimeMode.REALTIME:
 			check_time()
 			poll_realtime_timer = _create_timer("poll_realtime_timer", 1, self, "check_time") # Needed to keep the real_time var up to date
+			irl_sec_timer = _create_timer("irl_sec_timer", 1, self, "_emit_second")
 			irl_min_timer = _create_timer("irl_min_timer", 60, self, "_emit_minute")
 			irl_hour_timer = _create_timer("irl_hour_timer", 3600, self, "_emit_hour")
 			irl_day_timer = _create_timer("irl_day_timer", 86400, self, "_emit_day")
 		TimeMode.INGAMETIME:
+			in_game_sec_timer = _create_timer("in_game_sec_timer", config["in_game_minute_length_in_seconds"] / 60, self, "_emit_second")
 			in_game_min_timer = _create_timer("in_game_min_timer", config["in_game_minute_length_in_seconds"], self, "_in_game_time_has_passed")
 
 func _cleanup():
 	match current_mode:
 		TimeMode.REALTIME:
 			poll_realtime_timer.free()
+			irl_sec_timer.free()
 			irl_min_timer.free()
 			irl_hour_timer.free()
 			irl_day_timer.free()
 		TimeMode.INGAMETIME:
+			in_game_sec_timer.free()
 			in_game_min_timer.free()
+
+func _emit_second():
+	match current_mode:
+		TimeMode.REALTIME:
+			emit_signal("second_has_passed", real_time)
+		TimeMode.INGAMETIME:
+			ingame_time["second"] = ingame_time["second"] + 1
+			if ingame_time["second"] >= 60:
+				ingame_time["second"] = 0
+			emit_signal("second_has_passed", ingame_time)
 
 func _emit_minute():
 	match current_mode:
@@ -154,6 +177,7 @@ func _create_timer(timer_name: String, wait_by, connect_target: Node, function: 
 	timer.start()
 	return timer
 
+# This only handles minute/hour/day, second is seperated for performance reasons.
 func _in_game_time_has_passed():
 	ingame_time["minute"] = ingame_time["minute"] + 1
 	if ingame_time["minute"] >= 60:
