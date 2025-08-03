@@ -1,3 +1,9 @@
+> [!IMPORTANT] 
+> #### This repository has moved to [Codeberg](https://codeberg.org/misterj05/LSTAPI).
+> #### All further development will be conducted there.
+
+---
+
 # LSTAPI
 The LonelyStars TimeAPI, made for WEBFISHING.
 
